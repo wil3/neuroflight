@@ -51,3 +51,4 @@ ubuntu*.log
 gen/
 
 *.pyc
+__pycache__/
