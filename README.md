@@ -10,9 +10,8 @@ Neuroflight is the first open source neuro-flight controller software (firmware)
 
 Neuroflight aims to address limitations in PID control used in Betaflight
 through the use of neural network flight control (neuro-flight control). Neuro-flight control has been actively researched for more than a decade. In contrast to traditional control algorithms, neuro-flight control has the ability to *adapt*, *plan*, and *learn*. To account for dynamic changes Betaflight has introduced gain scheduling to increase the I gain when certain conditions are met, for example low voltages or high throttle (anti-gravity). On the other hand, neuro-flight control learns the true underlying dynamics of the aircraft allowing for optimal control depending on the current aircraft state. For example neuro-flight control has the potential to learn the batteries discharge rates to dynamically adjust control signal outputs accordingly.  The goal of this work is to provide the community with a
-stable platform to innovate and advance development of neuro-
-flight control design for drones, and to take a step towards
-making neuro-flight controllers mainstream
+stable platform to innovate and advance development of neuro-flight control design for drones, and to take a step towards
+making neuro-flight controllers mainstream.
 
 ## News
 
@@ -60,11 +59,10 @@ come up with a better method to handle this. Install [Bazel](https://bazel.build
 5) There appears to be a second bug in which `tensorflow/compiler/aot/runtime.cc` does not import `malloc.h`.
 
 ### Neuroflight compilation
-1) Set the environment variable `TENSORFLOW_DIR` to the location where you have
-installed Tensorflow. Best to export this in your bashrc or you can
-put this in your local make file, make/local.mk.
+1) In `make/local.mk` define `TENSORFLOW_DIR` to the location where you have
+installed Tensorflow or alternately export this as an environment variable. 
 
-2) In `make/local.mk` define the `CHECKPOINT` variable for the directory containing
+2) In `make/local.mk` define  `FC_MODEL_DIR` as the directory containing
 your neural network checkpoint.
 
 3) Refer to [Betaflight](https://github.com/betaflight/betaflight) or
@@ -72,7 +70,7 @@ src/main/target for list of supported FCs.
 
 #### Current Tested Flight Controller Hardware
 Any F7 should be fine. Flash memory is sufficient for F4's however it is unknown how the decreased processor speed will affect
-execution of the neural network.  
+execution of the neural network. Flight controllers known to work, 
 
 * Matek F722-STD
 
@@ -85,7 +83,7 @@ as they are not used by Neuroflight.
 
 ## Development
 In order to reduce maintenance, avoid merge conflicts and keep as in sync with
-upstream Betaflight, Neuroflight's architecture will maintain a minimize footprint and
+upstream Betaflight, Neuroflight's architecture will maintain a minimal footprint and
 isolate its code from Betaflight as much as possible. The following table
 describes the  files modified (M), and added (A) for Neuroflight,
 
