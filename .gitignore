@@ -21,7 +21,12 @@ README.pdf
 
 # artefacts of top-level Makefile
 /downloads/
-/tools/
+
+# We have tools included for optimizaing and building the 
+# neuro-flight controller we need to version control
+/tools/*
+!/tools/graph-compiling/
+
 /build/
 # local changes only
 make/local.mk
@@ -41,3 +46,8 @@ stm32.mak
 .vagrant
 ubuntu*.log
 /.vs
+
+# Auto-generated files
+gen/
+
+*.pyc
