@@ -91,14 +91,15 @@ describes the  files modified (M), and added (A) for Neuroflight,
 
 | Delta | File | Description |
 | --- | --- | --- |
-| M     | Makefile                  | Add rules to compile C++ code |
-| A     | make/graph.mk             | For compiling the neural network |
-| M     | make/source.mk            | Add new sources |
+| M     | Makefile                  | Include neuroflight.mk |
+| A     | make/neuroflight.mk             | Specifics for compiling the neural network |
+| M     | make/source.mk            | Add new sources and Tensorflow dependencies |
 | A     | tools/graph-compiling/&ast;    | Tools for compiling the neural network graph |
 | M     | src/main/fc/fc_core.c     | Replace PID with neuro-flight controller|
 | A     | src/main/graph/&ast;           | Source directory supporting interface and execution of the neuro-flight controller |
 | M     | src/main/flight/mixer.&ast;   | Inclusion of throttle mixing | 
-| A     | gen/graph/&ast;                | Generated files produced during neural network compilation |
+| A     | gen/graph/&ast;                | Auto-generated frozen and optimized graphs |
+| A     | gen/src/&ast;                | Auto-generated files to interface with neural network |
 | M     | src/main/platform.h | Remove poisoning of sprintf functions which is used deep in Tensorflow until we can find a better work around. | 
 
 
