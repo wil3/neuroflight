@@ -98,8 +98,7 @@ describes the  files modified (M), and added (A) for Neuroflight,
 | M     | src/main/fc/fc_core.c     | Replace PID with neuro-flight controller|
 | A     | src/main/graph/&ast;           | Source directory supporting interface and execution of the neuro-flight controller |
 | M     | src/main/flight/mixer.&ast;   | Inclusion of throttle mixing | 
-| A     | gen/graph/&ast;                | Auto-generated frozen and optimized graphs |
-| A     | gen/src/&ast;                | Auto-generated files to interface with neural network |
+| A     | gen/&ast;                | Auto-generated files to support neural network integration |
 | M     | src/main/platform.h | Remove poisoning of sprintf functions which is used deep in Tensorflow until we can find a better work around. | 
 
 
