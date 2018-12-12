@@ -1,3 +1,11 @@
+GRAPH_SRC = \
+            graph/graph_interface.cc \
+
+AOT_SRC = \
+			$(TENSORFLOW_DIR)/tensorflow/compiler/tf2xla/xla_compiled_cpu_function.cc \
+			$(TENSORFLOW_DIR)/tensorflow/compiler/aot/runtime.cc \
+			$(TENSORFLOW_DIR)/tensorflow/compiler/xla/executable_run_options.cc \
+			
 COMMON_SRC = \
             build/build_config.c \
             build/debug.c \
@@ -108,6 +116,7 @@ FC_SRC = \
             flight/mixer.c \
             flight/mixer_tricopter.c \
             flight/pid.c \
+            graph/neuro.c \
             flight/servos.c \
             flight/servos_tricopter.c \
             interface/cli.c \
@@ -370,6 +379,11 @@ SRC += \
 endif
 
 SRC += $(COMMON_SRC)
+
+# Add Eigen library for AOT compilation
+
+INCLUDE_DIRS += $(ROOT)/lib/main/eigen
+INCLUDE_DIRS += $(TENSORFLOW_DIR)
 
 #excludes
 SRC   := $(filter-out $(MCU_EXCLUDES), $(SRC))

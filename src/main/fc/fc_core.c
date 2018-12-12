@@ -85,6 +85,8 @@
 #include "flight/pid.h"
 #include "flight/servos.h"
 
+#include "graph/neuro.h"
+
 
 // June 2013     V2.2-dev
 
@@ -915,7 +917,7 @@ static void subTaskMotorUpdate(timeUs_t currentTimeUs)
         startTime = micros();
     }
 
-    mixTable(currentTimeUs, currentPidProfile->vbatPidCompensation);
+    //mixTable(currentTimeUs, currentPidProfile->vbatPidCompensation);
 
 #ifdef USE_SERVOS
     // motor outputs are used as sources for servo mixing, so motors must be calculated using mixTable() before servos.
@@ -950,7 +952,7 @@ void taskMainPidLoop(timeUs_t currentTimeUs)
         pidUpdateCountdown--;
     } else {
         pidUpdateCountdown = pidConfig()->pid_process_denom - 1;
-        subTaskPidController(currentTimeUs);
+        neuroController(currentTimeUs);
         subTaskMotorUpdate(currentTimeUs);
         subTaskMainSubprocesses(currentTimeUs);
     }

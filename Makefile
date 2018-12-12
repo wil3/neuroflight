@@ -42,7 +42,7 @@ FLASH_SIZE ?=
 # Things that need to be maintained as the source changes
 #
 
-FORKNAME      = betaflight
+FORKNAME      = neuroflight
 
 # Working directories
 ROOT            := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
@@ -169,6 +169,7 @@ VPATH           := $(VPATH):$(TARGET_DIR)
 
 include $(ROOT)/make/source.mk
 
+
 ###############################################################################
 # Things that might need changing to use different tools
 #
@@ -216,6 +217,7 @@ CFLAGS     += $(ARCH_FLAGS) \
               -MMD -MP \
               $(EXTRA_FLAGS)
 
+
 ASFLAGS     = $(ARCH_FLAGS) \
               -x assembler-with-cpp \
               $(addprefix -I,$(INCLUDE_DIRS)) \
@@ -242,6 +244,7 @@ endif
 # No user-serviceable parts below
 ###############################################################################
 
+
 CPPCHECK        = cppcheck $(CSOURCES) --enable=all --platform=unix64 \
                   --std=c99 --inline-suppr --quiet --force \
                   $(addprefix -I,$(INCLUDE_DIRS)) \
@@ -264,6 +267,10 @@ CLEAN_ARTIFACTS += $(TARGET_HEX)
 CLEAN_ARTIFACTS += $(TARGET_ELF) $(TARGET_OBJS) $(TARGET_MAP)
 CLEAN_ARTIFACTS += $(TARGET_LST)
 
+
+# Neuroflight specifics 
+include $(ROOT)/make/neuroflight.mk
+
 # Make sure build date and revision is updated on every incremental build
 $(OBJECT_DIR)/$(TARGET)/build/version.o : $(SRC)
 
@@ -281,9 +288,9 @@ $(TARGET_BIN): $(TARGET_ELF)
 	@echo "Creating BIN $(TARGET_BIN)" "$(STDOUT)"
 	$(V1) $(OBJCOPY) -O binary $< $@
 
-$(TARGET_ELF):  $(TARGET_OBJS)
+$(TARGET_ELF):  $(TARGET_OBJS)  
 	@echo "Linking $(TARGET)" "$(STDOUT)"
-	$(V1) $(CROSS_CC) -o $@ $^ $(LD_FLAGS)
+	$(V1) $(CROSS_CXX) -o $@ $^ $(LD_FLAGS)
 	$(V1) $(SIZE) $(TARGET_ELF)
 
 # Compile
@@ -304,6 +311,7 @@ $(OBJECT_DIR)/$(TARGET)/%.o: %.c
 	echo "%% $(notdir $<)" "$(STDOUT)" && \
 	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_DEFAULT_OPTIMISATION) $<))
 endif
+
 
 # Assemble
 $(OBJECT_DIR)/$(TARGET)/%.o: %.s

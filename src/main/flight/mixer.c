@@ -795,3 +795,35 @@ uint16_t convertMotorToExternal(float motorValue)
 
     return externalValue;
 }
+
+void mixGraphOutput(timeUs_t currentTimeUs, float *graph_output)
+{
+    calculateThrottleAndCurrentMotorEndpoints(currentTimeUs);
+
+	//Get min and max from the output
+	float outputMax = 0, outputMin = 0;
+	for (int i = 0; i < motorCount; i++) {
+		float output = graph_output[i]; 
+		if (output > outputMax) {
+			outputMax = output;
+		} else if (output < outputMin) {
+			outputMin = output;
+		}
+	}
+
+
+    motorMixRange = outputMax - outputMin;
+
+	float throttle_output = throttle * (1.0f - (outputMax));
+
+    for (uint32_t i = 0; i < motorCount; i++) {
+        float motorOutput = motorOutputMin + (motorOutputRange * (motorOutputMixSign * graph_output[i] + throttle_output * currentMixer[i].throttle));
+		motor[i] =  motorOutput;
+    }
+    // Disarmed mode
+    if (!ARMING_FLAG(ARMED)) {
+        for (int i = 0; i < motorCount; i++) {
+            motor[i] = motor_disarmed[i];
+        }
+    }
+}
