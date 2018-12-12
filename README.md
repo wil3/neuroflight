@@ -1,3 +1,5 @@
+![Neuroflight](https://github.com/wil3/neuroflight/raw/v3.3.x-neuroflight/logo.png)
+
 ## WARNING 
 This is experimental firmware, use at your own risk!
 
