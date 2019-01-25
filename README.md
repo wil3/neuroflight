@@ -1,7 +1,9 @@
 ![Neuroflight](https://github.com/wil3/neuroflight/raw/v3.3.x-neuroflight/logo.png)
 
 ## WARNING 
-This is experimental firmware, use at your own risk!
+This is experimental firmware, use at your own risk! This repo is intended for academic
+and research
+purposes. 
 
 There is still a significant amount of research required to validate the
 behavior of neuro-flight controllers. If the neural network is not trained properly, instabilities and unpredictable behaviors will occur.  
@@ -13,7 +15,17 @@ Neuroflight is the first open source neuro-flight controller software (firmware)
 Neuroflight aims to address limitations in PID control used in Betaflight
 through the use of neural network flight control (neuro-flight control). Neuro-flight control has been actively researched for more than a decade. In contrast to traditional control algorithms, neuro-flight control has the ability to *adapt*, *plan*, and *learn*. To account for dynamic changes Betaflight has introduced gain scheduling to increase the I gain when certain conditions are met, for example low voltages or high throttle (anti-gravity). On the other hand, neuro-flight control learns the true underlying dynamics of the aircraft allowing for optimal control depending on the current aircraft state. For example neuro-flight control has the potential to learn the batteries discharge rates to dynamically adjust control signal outputs accordingly.  The goal of this work is to provide the community with a
 stable platform to innovate and advance development of neuro-flight control design for drones, and to take a step towards
-making neuro-flight controllers mainstream.
+making neuro-flight controllers mainstream. For further details refer to our
+[preprint](https://wfk.io/docs/neuroflight.pdf) and please use the following BibTex
+entry to cite our work,
+```
+@article{koch2019neuroflight,
+  title={Neuroflight: Next Generation Flight Control Firmware},
+  author={Koch, William and Mancuso, Renato and Bestavros, Azer},
+  journal={arXiv preprint arXiv:1901.06553},
+  year={2019}
+}
+```
 
 ## News
 
