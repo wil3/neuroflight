@@ -8,6 +8,8 @@ purposes.
 There is still a significant amount of research required to validate the
 behavior of neuro-flight controllers. If the neural network is not trained properly, instabilities and unpredictable behaviors will occur.  
 
+An executable firmware, suitable for the NF1 reference quadcopter, is available here: <insert link£
+
 ## Neuroflight: Next Generation Flight Control Firmware
 
 Neuroflight is the first open source neuro-flight controller software (firmware) for remotely piloting multi-rotors and fixed wing aircraft. Neuroflight's primary focus is to provide optimal flight performance.  
