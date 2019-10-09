@@ -817,7 +817,8 @@ void mixGraphOutput(timeUs_t currentTimeUs, float *graph_output)
 	float throttle_output = throttle * (1.0f - (outputMax));
 
     for (uint32_t i = 0; i < motorCount; i++) {
-        float motorOutput = motorOutputMin + (motorOutputRange * (motorOutputMixSign * graph_output[i] + throttle_output * currentMixer[i].throttle));
+        //float motorOutput = motorOutputMin + (motorOutputRange * (motorOutputMixSign * graph_output[i] + throttle_output * currentMixer[i].throttle));
+        float motorOutput = (motorOutputRange * (motorOutputMixSign * graph_output[i] + throttle_output * currentMixer[i].throttle));
 		motor[i] =  motorOutput;
     }
     // Disarmed mode
