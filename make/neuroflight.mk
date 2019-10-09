@@ -82,27 +82,21 @@ CLEAN_ARTIFACTS += $(TARGET_GRAPH_OBJS)
 # Targets
 #########################################################################
 
-$(GEN_SRC)/graph_dim.h:
+$(GEN_SRC)/graph_dim.h :
 	$(V1) mkdir -p $(dir $@)
 	python3 $(GRAPH_TOOLS_DIR)/gen_graph_config_header.py $(FC_MODEL_DIR) $(GEN_SRC)
 	echo "%% Generated graph_dim.h"
 
-# The main neuro control file needs the dimensions of the graph which is 
-# auto generated
-$(OBJECT_DIR)/$(TARGET)/graph/neuro.o: $(SRC_DIR)/graph/neuro.c $(GEN_SRC)/graph_dim.h
-	$(V1) mkdir -p $(dir $@)
-	$(V1) $(if $(findstring $(subst ./src/main/,,$<),$(SPEED_OPTIMISED_SRC)), \
-	echo "%% (speed optimised) $(notdir $<)" "$(STDOUT)" && \
-	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_SPEED_OPTIMISATION) $<, \
-	$(if $(findstring $(subst ./src/main/,,$<),$(SIZE_OPTIMISED_SRC)), \
-	echo "%% (size optimised) $(notdir $<)" "$(STDOUT)" && \
-	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_SIZE_OPTIMISATION) $<, \
-	echo "%% $(notdir $<)" "$(STDOUT)" && \
-	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_DEFAULT_OPTIMISATION) $<))
+
+
 
 # Freeze the graph, then optimize the graph to run on hardware.
 # Finally compile the graph to an object
-$(OBJECT_DIR)/$(TARGET)/graph/graph.o :  $(FC_MODEL_DIR)/checkpoint
+$(OBJECT_DIR)/$(TARGET)/graph/graph.o $(GEN_SRC)/graph.h :  $(FC_MODEL_DIR)/checkpoint
+
+#	$(V1) mkdir -p $(dir $@)
+#	python3 $(GRAPH_TOOLS_DIR)/gen_graph_config_header.py $(FC_MODEL_DIR) $(GEN_SRC)
+#	echo "%% Generated graph_dim.h"
 
 	$(V1) mkdir -p $(dir $@)
 	mkdir -p $(GEN_GRAPH) 
@@ -131,7 +125,7 @@ else
 # TARGET if running on embedded
 # TODO pull target_cpu and triple from arch
 		$(TFCOMPILE)\
-		     --graph=$(GEN_GRAPH)/frozen_model_optimized.pb\
+		     --graph=$(OPT_MODEL)\
 			 --cpp_class="$(GRAPH_CPP_CLASS)"\
 			 --config="$(TFCOMPILE_CONFIG)"\
 			 --out_function_object="$(@)"\
@@ -140,6 +134,19 @@ else
 			 --target_cpu="cortex-m7"\
 			 --target_triple="armv7em-none-eabi" 
 endif
+
+# The main neuro control file needs the dimensions of the graph which is 
+# auto generated
+$(OBJECT_DIR)/$(TARGET)/graph/neuro.o: $(SRC_DIR)/graph/neuro.c $(GEN_SRC)/graph_dim.h
+	$(V1) mkdir -p $(dir $@)
+	$(V1) $(if $(findstring $(subst ./src/main/,,$<),$(SPEED_OPTIMISED_SRC)), \
+	echo "%% (speed optimised) $(notdir $<)" "$(STDOUT)" && \
+	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_SPEED_OPTIMISATION) $<, \
+	$(if $(findstring $(subst ./src/main/,,$<),$(SIZE_OPTIMISED_SRC)), \
+	echo "%% (size optimised) $(notdir $<)" "$(STDOUT)" && \
+	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_SIZE_OPTIMISATION) $<, \
+	echo "%% $(notdir $<)" "$(STDOUT)" && \
+	$(CROSS_CC) -c -o $@ $(CFLAGS) $(CC_DEFAULT_OPTIMISATION) $<))
 
 # The graph interface file depends on the auto generated header file from tfcompile
 $(OBJECT_DIR)/$(TARGET)/graph/graph_interface.o: $(SRC_DIR)/graph/graph_interface.cc $(GEN_SRC)/graph.h
