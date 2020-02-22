@@ -29,6 +29,9 @@ entry to cite our work,
 
 ## News
 
+* 2019-08-09 Thesis defended, [Flight Controller Synthesis via Deep Reinforcement Learning](http://wfk.io/docs/WilliamKochThesisFINAL.pdf)
+* 2019-08-06 Neuroflight reaches new level of performance
+  [https://www.youtube.com/watch?v=MByCyEnsYP0](https://www.youtube.com/watch?v=MByCyEnsYP0).
 * 2018-11-14 Stable flight has been achieved with Neuroflight [https://youtu.be/c3aDDPasjjQ](https://youtu.be/c3aDDPasjjQ)
 
 ## Features
@@ -51,17 +54,36 @@ Input (x) is of size 6, where x = [roll error, pitch error, yaw error, delta rol
 
 ### Pre-requites 
 
-1) Use [GymFC](https://github.com/wil3/gymfc) to train and create a neural network in the
+1) **Build Model** Use [GymFC](https://github.com/wil3/gymfc) to train and create a neural network in the
 form of a Tensorflow checkpoint.  
 
-2) Place the checkpoint files (four of them: checkpoint, \*.data, \*.meta,
+Place the generated checkpoint files (four of them: checkpoint, \*.data, \*.meta,
 \*.index-\*) in a directory which can be independently version
 controlled. 
 
-3) Create a file called `tf2xla.config.pbtxt` in the directory and define the
+Create a file called `tf2xla.config.pbtxt` in the directory and define the
 neural network configuration according to [https://www.tensorflow.org/xla/tfcompile](https://www.tensorflow.org/xla/tfcompile).
+For example if building with OpenAI baselines PPO1 with angular rate error, and
+delta angular rate error as input , 
+```
+feed {
+    id { node_name: "pi/ob" }
+	shape { 
+		dim { size: 1}
+		dim { size: 6}
+	}
+}
+fetch {
+	id { node_name: "pi/pol/final/BiasAdd"}
+}
 
-4) Neuroflight was developed using [Tensorflow-1.8.0](https://github.com/tensorflow/tensorflow/releases/tag/v1.8.0). 
+```
+
+2) **Install Tensorflow**  Update: A patched version of Tensorflow is now
+available [here](https://github.com/wil3/tensorflow-neuroflight). If you'd like
+to patch your own copy of Tensorflow continue reading, 
+
+ Neuroflight was developed using [Tensorflow-1.8.0](https://github.com/tensorflow/tensorflow/releases/tag/v1.8.0). 
 There appears to be a bug/issue in Tensorflow-1.8.0-rc1 preventing the ABI type from being passed to tfcompile used to compile the neural network. A quick hack to force the correct ABIType is to modify compiler/xla/service/llvm_ir/llvm_util.cc. At the end of the
 function SetTargetOptions place,   
 ```C++
@@ -70,7 +92,17 @@ target_options->FloatABIType = llvm::FloatABI::Hard;
 Need to investigate whether these bugs have been fixed in newer versions or
 come up with a better method to handle this. Install [Bazel](https://bazel.build/) and then build Tensorflow.
 
-5) There appears to be a second bug in which `tensorflow/compiler/aot/runtime.cc` does not import `malloc.h`.
+There appears to be a second bug in which `tensorflow/compiler/aot/runtime.cc` does not import `malloc.h`.
+
+3) **Install Python Dependencies**
+
+Use a virtual environment to isolate Python packages. In this directory,
+
+```
+python3 -m venv env
+source env/bin/activate
+pip3 install -r requirements.txt
+```
 
 ### Neuroflight compilation
 1) In `make/local.mk` define `TENSORFLOW_DIR` to the location where you have
@@ -87,6 +119,12 @@ Any F7 should be fine. Flash memory is sufficient for F4's however it is unknown
 execution of the neural network. Flight controllers known to work, 
 
 * Matek F722-STD
+
+To build firmware,
+```
+make TARGET=MATEKF722
+```
+Flash FC with `obj/neuroflight_3.3.3_MATEKF722.hex`
 
 ## Configuration
 
